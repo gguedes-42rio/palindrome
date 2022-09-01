@@ -19,13 +19,11 @@ char	*strjoin(char const *s1, char const *s2)
 	return (new_str);
 }
 
-int	find_prime(char *str)
+int	is_prime(int n)
 {
 	int	i;
-	int	n;
 
-	n = atoi(str);
-	if (n % 2 == 0)
+	if (n % 2 == 0 || n < 2)
 		return (0);
 	i = 3;
 	while (i < n)
@@ -37,7 +35,7 @@ int	find_prime(char *str)
 	return (1);
 }
 
-int	find_palindrome(char *str)
+char	*is_palindrome(char *str)
 {
 	int	i;
 	int	len;
@@ -45,13 +43,11 @@ int	find_palindrome(char *str)
 	len = strlen(str);
 	len--;
 	i = 0;
-	while (str[i] == str[len - i])
+	while (str[i] == str[len - i] && i < len)
 		i++;
 	if (i < len)
-		return (0);
-	if (find_prime(str) == 1)
-		return (1);
-	return (1);
+		return (NULL);
+	return (str);
 }
 
 char	*read_pi(int fd, int n)
@@ -63,43 +59,48 @@ char	*read_pi(int fd, int n)
 
 	buffer = malloc(sizeof(char) * 2);
 	if (!buffer)
-		return (NULL);
+		exit(1);
 	buffer[1] = '\0';
 	str = malloc(sizeof(char) * n + 1);
 	if (!str)
-		return (NULL);
+		exit(1);
 	bytes_read = read(fd, str, n);
 	str[n + 1] = '\0';
 	while (bytes_read > 0)
 	{
+		if (is_palindrome(str))
+		{
+			if (str[0] == '1' || str[0] == '3'
+				|| str[0] == '7' || str[0] == '9')
+			{
+				write(1, str, strlen(str));
+				write(1, "\n", 1);
+			}
+		}
 		bytes_read = read(fd, buffer, 1);
-		if (find_palindrome(str) == 1)
-			break ;
 		tmp = strjoin(str + 1, buffer);
 		free(str);
 		str = tmp;
-	}
-	if (bytes_read == 0)
-	{
-		write(1, "EOF\n", 4);
-		exit(1);
 	}
 	return (str);
 }
 
 int	main(int argc, char **argv)
 {
-	int		fd;
-	char	*str;
+	int	fd;
 
 	if (argc != 3)
+	{
+		write(2, "invalid args\n", 13);
 		return (1);
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
+	{
+		write(2, "unable to open file\n", 20);
 		return (1);
-	str = read_pi(fd, atoi(argv[2]));
-	write(1, "the number is: ", 15);
-	write(1, str, strlen(str));
-	write(1, "\n", 1);
+	}
+	read_pi(fd, atoi(argv[2]));
+	write(1, "EOF\n", 4);
 	return (0);
 }
