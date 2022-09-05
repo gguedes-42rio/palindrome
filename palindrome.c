@@ -73,5 +73,6 @@ int	main(int argc, char **argv)
 	if (fd == -1)
 		return (1);
 	read_pi(fd, atoi(argv[2]));
+	close(fd);
 	return (0);
 }
