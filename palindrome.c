@@ -1,24 +1,5 @@
 #include "palindrome.h"
 
-char	*strjoin(char const *s1, char const *s2)
-{
-	int		i;
-	char	*new_str;
-
-	if (!s1)
-		return (NULL);
-	new_str = malloc(sizeof(char) * (strlen(s1) + strlen(s2) + 1));
-	if (!new_str)
-		return (NULL);
-	i = 0;
-	while (*s1)
-		new_str[i++] = *s1++;
-	while (*s2)
-		new_str[i++] = *s2++;
-	new_str[i] = '\0';
-	return (new_str);
-}
-
 char	*is_palindrome(char *str)
 {
 	int	i;
@@ -38,12 +19,12 @@ char	*read_pi(int fd, int digits)
 {
 	int		bytes_read;
 	char	*str;
-	char	*tmp;
 	char	buffer[2];
 
 	str = malloc(sizeof(char) * (digits + 1));
 	bytes_read = read(fd, str, digits);
 	str[bytes_read] = '\0';
+	digits--;
 	while (bytes_read > 0)
 	{
 		if (is_palindrome(str))
@@ -52,9 +33,8 @@ char	*read_pi(int fd, int digits)
 			write(1, "\n", 1);
 		}
 		bytes_read = read(fd, buffer, 1);
-		tmp = strjoin(str + 1, buffer);
-		free(str);
-		str = tmp;
+		memcpy(str, str + 1, digits);
+		str[digits] = buffer[0];
 	}
 	if (bytes_read == -1)
 		write(2, "something went wrong\n", 21);
