@@ -15,7 +15,7 @@ char	*is_palindrome(char *str)
 	return (str);
 }
 
-int	*read_pi(int fd, int digits)
+int	read_pi(int fd, int digits)
 {
 	int		bytes_read;
 	char	*str;
