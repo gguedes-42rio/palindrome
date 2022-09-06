@@ -15,7 +15,7 @@ char	*is_palindrome(char *str)
 	return (str);
 }
 
-char	*read_pi(int fd, int digits)
+int	*read_pi(int fd, int digits)
 {
 	int		bytes_read;
 	char	*str;
@@ -36,11 +36,12 @@ char	*read_pi(int fd, int digits)
 		memcpy(str, str + 1, digits);
 		str[digits] = buffer[0];
 	}
+	free(str);
 	if (bytes_read == -1)
 		write(2, "something went wrong\n", 21);
 	else if (bytes_read == 0)
 		write(1, "EOF\n", 4);
-	return (str);
+	return (bytes_read);
 }
 
 int	main(int argc, char **argv)
