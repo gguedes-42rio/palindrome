@@ -8,7 +8,7 @@ CFLAGS	=	-Wall -Werror -Wextra -I.
 
 CC		=	cc
 
-RM		=	rm
+RM		=	rm -f
 
 all: $(NAME)
 
