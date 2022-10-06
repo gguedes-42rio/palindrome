@@ -28,7 +28,10 @@ int	read_file(int fd, int digits)
 	while (bytes_read > 0)
 	{
 		if (is_palindrome(str))
+		{
 			write(1, str, strlen(str));
+			write(1, "\n", 1);
+		}
 		bytes_read = read(fd, buffer, 1);
 		memcpy(str, str + 1, digits);
 		str[digits] = buffer[0];
